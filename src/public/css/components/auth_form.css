@@ -1,0 +1,91 @@
+.auth-form__form {
+    text-align: center;
+    padding: 80px;
+    margin: 0 230px;
+}
+
+.auth-form__label{
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    font-size: 21px;
+    margin-top: 50px;
+}
+
+.auth-form__input {
+    display: block;
+    padding: 5px 12px;
+    width: 100%;
+    font-size: 16px;
+    height: 40px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+}
+
+.page-auth-register .auth-form__input {
+    height: 35px;
+    padding: 3px 12px;
+}
+
+.btn--big{
+    width: 100%;
+    margin-top: 60px;
+    font-size: 20px;
+}
+
+.link{
+    display: block;
+    margin-top: 30px;
+    text-align: center;
+    color: #0073CC;
+    text-decoration: none;
+}
+
+.verify-notice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 50px auto;
+}
+
+.verify-notice__inner {
+    padding: 40px;
+    text-align: center;
+}
+
+.verify-notice__heading {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.verify-notice__button-container {
+    margin: 20px auto;
+}
+
+.verify-notice__button {
+    background-color: #D9D9D9;
+    color: black;
+    text-decoration: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.verify-notice__resend-form {
+    margin: 30px auto;
+}
+
+.verify-notice__resend-link {
+    text-decoration: none;
+    color: dodgerblue;
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+}
