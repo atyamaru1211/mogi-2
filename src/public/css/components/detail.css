@@ -1,0 +1,72 @@
+.detail-card {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 25px 50px;
+    border-bottom: 1px solid #E1E1E1;
+}
+
+.detail-item:last-of-type {
+    border-bottom: none;
+}
+
+.item-label {
+    width: 200px;
+    font-weight: bold;
+    color: #737373;
+}
+
+.item-value {
+    display: flex;
+    font-weight: bold;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.name-value {
+    padding-left: 15px;
+}
+
+.date-value {
+    justify-content: flex-start;
+    margin-left: 60px;
+    gap: 120px;
+}
+
+.time-input-group {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.time-input {
+    padding: 8px 10px;
+    width: 100px;
+    border-radius: 4px;
+    appearance: none;
+    text-align: center;
+    border: 1px solid #E1E1E1;
+    font-weight: bold;
+    font-family: 'inter';
+}
+
+.time-input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.note {
+    width: 280px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #E1E1E1;
+}
+
+.submit-button {
+    width: fit-content;
+    margin-top: 30px;
+    margin-left: auto;
+}

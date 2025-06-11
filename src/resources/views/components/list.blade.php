@@ -2,23 +2,19 @@
 
 @section('title', '勤怠一覧')
 
-@section('css')
-<link rel="stylesheet" href="{{ asset('/css/components/list.css')  }}">
-@endsection
+@section('body_class', 'has-background')
 
 @section('content')
-
-@include('components.header')
 <div class="content">
     <h1 class="page-title">勤怠一覧</h1>
     <!--★月のページネーション-->
     <div class="navigation">
-        <a class="nav-arrow" href="">前月</a>
-        <span class="current-month"><img class="calendar-icon" src="{{ asset('img/nav.png') }}" alt="カレンダー">2023/06</span>
-        <a class="nav-arrow" href="">翌月</a>
+        <a class="nav-arrow" href=""><img class="arrow-icon--prev" src="{{ asset('img/arrow.png') }}" alt="左矢印">前月</a>
+        <span class="current"><img class="calendar-icon" src="{{ asset('img/nav.png') }}" alt="カレンダー">2023/06</span>
+        <a class="nav-arrow" href="">翌月<img class="arrow-icon--next" src="{{ asset('img/arrow.png') }}" alt="右矢印"></a>
     </div>
     <!--★勤怠データテーブル-->
-    <table class="attendance-table">
+    <table class="app-table">
         <thead>
             <tr>
                 <th>日付</th>
@@ -57,3 +53,4 @@
         </tbody>
     </table>
 </div>
+@endsection

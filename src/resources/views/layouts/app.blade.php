@@ -13,8 +13,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    @yield('content')
+<body class="@yield('body_class')">
+    @include('components.header')
+    <main class="main">
+        @yield('content')
+    </main>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -31,5 +34,6 @@
         @endif
     </script>
 
+    @yield('scripts')
 </body>
 </html>

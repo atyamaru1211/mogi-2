@@ -8,8 +8,7 @@
 
 @section('content')
 
-@include('components.header')
-<form class="auth-form__form" action="/login">
+<form class="auth-form__form" action="/login" method="post">
     @csrf
     <h1 class="title">ログイン</h1>
     <label class="auth-form__label" for="mail">メールアドレス</label>

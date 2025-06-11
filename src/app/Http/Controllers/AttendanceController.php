@@ -9,6 +9,6 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        return view('components/list');
+        return view('pages.user_clock');
     }
 }

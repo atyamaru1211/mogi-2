@@ -89,3 +89,9 @@
     border: none;
     background: none;
 }
+
+.error-message {
+    margin: 0;
+    text-align: left;
+    color: #FF9494;
+}

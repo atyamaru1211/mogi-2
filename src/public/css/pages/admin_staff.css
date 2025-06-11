@@ -1,0 +1,17 @@
+.staff-table th:nth-child(1),
+.staff-table td:nth-child(1) {
+    width: 25%;
+    text-align: center;
+}
+
+.staff-table th:nth-child(2),
+.staff-table td:nth-child(2) {
+    width: 40%;
+    text-align: center;
+}
+
+.staff-table th:nth-child(3),
+.staff-table td:nth-child(3) {
+    width: 25%;
+    text-align: center;
+}
