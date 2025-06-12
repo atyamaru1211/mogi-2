@@ -9,6 +9,11 @@
 @section('content')
 <div class="verify-notice">
     <div class="verify-notice__inner">
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
         <p class="verify-notice__heading">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
         <div class="verify-notice__button-container">
             <a class="verify-notice__button" href="/mailhog">認証はこちらから</a>

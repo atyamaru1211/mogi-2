@@ -11,6 +11,11 @@
 <div class="page-auth-register">
     <form class="auth-form__form" action="/register" method="post">
         @csrf
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <h1 class="title">会員登録</h1>
         <label class="auth-form__label" for="name">名前</label>
         <input class="auth-form__input" type="text" name="name" id="name" value="{{ old('name') }}">

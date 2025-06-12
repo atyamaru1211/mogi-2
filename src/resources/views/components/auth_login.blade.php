@@ -10,6 +10,11 @@
 
 <form class="auth-form__form" action="/login" method="post">
     @csrf
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
     <h1 class="title">ログイン</h1>
     <label class="auth-form__label" for="mail">メールアドレス</label>
     <input class="auth-form__input" type="email" name="email" id="email" value="{{ old('email') }}">

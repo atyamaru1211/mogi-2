@@ -32,25 +32,27 @@ Route::get('/email/verify', function() {
 
 //認証メールの再送
 Route::post('/email/verification-notification', function (Request $request) {
+    //★registered_emailを取得。これはRegisteredUserControllerで作られてる
     $email = Session::get('registered_email');
-
+    //★もしセッションにメアドがなかったら会員登録画面に戻す
     if (!$email) {
         return redirect('/register')->with('error', '認証メールを再送するには、ユーザー情報が必要です。再度会員登録をしてください。');
     }
-
+    //★そのメアドを使って、データベースからユーザーを探す
     $user = User::where('email', $email)->first();
-
+    //★もしデータベースに見つからなかったら会員登録画面に戻す
     if (!$user) {
         return redirect('/register')->with('error', '指定されたメールアドレスのユーザーが見つかりませんでした。再度会員登録をしてください。');
     }
-
-    // 既に認証済みの場合
+    //★ 既に認証済みの場合はログイン画面に行く
     if ($user->hasVerifiedEmail()) {
         return redirect('/login')->with('status', 'メールアドレスは既に認証済みです。ログインしてください。');
     }
-
+    //★認証メールを再送する
     $user->sendEmailVerificationNotification();
+    //★resentという情報を一時的にセッションに保存。メールが再送されたことをビューに伝えるためによく使われる手法
     Session::flash('resent', true);
+    //★メール認証誘導画面に戻り(まあ元々動かないんだけど)メッセージを表示させる
     return back()->with('status', '新しい認証メールを送信しました。メールをご確認ください。');
 })->name('verification.send');
 

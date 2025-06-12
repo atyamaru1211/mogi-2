@@ -95,3 +95,15 @@
     text-align: left;
     color: #FF9494;
 }
+
+.alert {
+    text-align: center;
+}
+
+.alert-success {
+    color: #0073CC;
+}
+
+.alert-danger {
+    color: #FF9494;
+}
