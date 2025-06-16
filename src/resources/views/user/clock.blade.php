@@ -3,7 +3,7 @@
 @section('title', '勤怠')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('/css/pages/user_clock.css')  }}">
+<link rel="stylesheet" href="{{ asset('/css/user/clock.css')  }}">
 @endsection
 
 @section('body_class', 'has-background')

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
-use Laravel\Fortify\Contracts\VerifyEmailViewResponse; // ★この行を追加！★
+use Laravel\Fortify\Contracts\VerifyEmailViewResponse;
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 
 
@@ -28,8 +28,7 @@ class FortifyServiceProvider extends ServiceProvider
             return new class implements VerifyEmailViewResponse {
                 public function toResponse($request)
                 {
-                    // あなたのメール認証誘導ビューのパスに合わせる
-                    return view('pages.auth_verify');
+                    return view('auth.verify');
                 }
             };
         });
@@ -43,11 +42,11 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::createUsersUsing(CreateNewUser::class);
         
         Fortify::registerView(function () {
-            return view('pages.auth_register');
+            return view('auth.register');
         });
 
         Fortify::loginView(function () {
-            return view('components.auth_login');
+            return view('auth.login');
         });
 
         RateLimiter::for('login', function (Request $request) {
@@ -56,7 +55,6 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($email . $request->ip());
         });
 
-        //デフォルトのログイン機能にあるフォームリクエストを自作のものに代替するため、サービスコンテナにバインド
         app()->bind(FortifyLoginRequest::class, LoginRequest::class);
     }
 }

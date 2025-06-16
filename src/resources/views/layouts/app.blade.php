@@ -14,7 +14,7 @@
 </head>
 
 <body class="@yield('body_class')">
-    @include('components.header')
+    @include('layouts.header')
     <main class="main">
         @yield('content')
     </main>

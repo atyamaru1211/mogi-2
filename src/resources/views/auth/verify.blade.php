@@ -3,7 +3,7 @@
 @section('title', 'メール認証')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('/css/components/auth_form.css')  }}">
+<link rel="stylesheet" href="{{ asset('/css/auth/auth_form.css')  }}">
 @endsection
 
 @section('content')
@@ -15,12 +15,13 @@
                 {{ session('unverified_email_message') }}
             </div>
         @endif
-
-        @if (session('status') === 'verification-link-sent')
-            <p class="alert alert-success">
-                新しい認証メールを再送信しました！
-            </p>
+        <!--★メール再送成功メッセージ-->
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
         @endif
+
         <p class="verify-notice__heading">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
         <div class="verify-notice__button-container">
             <a class="verify-notice__button" href="/mailhog">認証はこちらから</a>

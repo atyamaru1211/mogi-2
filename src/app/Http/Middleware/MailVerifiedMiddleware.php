@@ -25,7 +25,6 @@ class MailVerifiedMiddleware
 
         // ユーザーが存在し、かつメール認証が完了していない場合
         if ($user && !$user->hasVerifiedEmail()) {
-            // ★この行が確実に存在することを再確認！★
             Session::put('unauthenticated_user', $user);
             return redirect()->route('verification.notice')->with('unverified_email_message', 'このアカウントはまだメール認証が完了していません。メールをご確認ください。');
         }
