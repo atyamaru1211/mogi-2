@@ -28,8 +28,21 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 
 // 勤怠画面 - 認証済みかつメール認証済みユーザーのみアクセス可能
 Route::middleware(['auth', 'verified'])->group(function() {
+    //★出勤登録画面
     Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::post('/attendance', [AttendanceController::class, 'store']);
+    //★勤怠一覧画面
+    Route::get('/attendance/list', [AttendanceController::class, 'list']);
+    //★勤怠詳細画面
+    Route::get('/attendance/{id}', [AttendanceController::class, 'show']);
+    //★申請機能
+    Route::post('/stamp_correction_request', [AttendanceController::class, 'update']);
 });
+
+
+
+
+
 
 //メール認証誘導画面 
 Route::get('/email/verify', function() {

@@ -18,48 +18,41 @@
                 <!--★名前-->
                 <div class="detail-item">
                     <dt class="item-label">名前</dt>
-                    <dd class="item-value name-value">西　玲奈</dd>
+                    <dd class="item-value name-value">{{ $attendance->user->name }}</dd>
                 </div>
                 <!--★日付-->
                 <div class="detail-item">
                     <dt class="item-label">日付</dt>
                     <dd class="item-value date-value">
-                        <span class="date-year">2023年</span>
-                        <span class="date-month-day">6月1日</span>
+                        <span class="date-year">{{ $attendance->date->format('Y年') }}</span>
+                        <span class="date-month-day">{{ $attendance->date->format('m月d日') }}</span>
                     </dd>
                 </div>
                 <!--★出勤・退勤-->
                 <div class="detail-item">
                     <dt class="item-label">出勤・退勤</dt>
                     <dd class="item-value time-input-group">
-                        <input class="time-input" type="time" value="09:00">
+                        <input class="time-input" type="time" name="clock_in_time" value="{{ $attendance->clock_in_time ? $attendance->clock_in_time->format('H:i') : '' }}">
                         <span class="time-separator">～</span>
-                        <input class="time-input" type="time" value="18:00">
+                        <input class="time-input" type="time" name="clock_out_time" value="{{ $attendance->clock_out_time ? $attendance->clock_out_time->format('H:i') : '' }}">
                     </dd>
                 </div>
                 <!--★休憩-->
-                <div class="detail-item">
-                    <dt class="item-label">休憩</dt>
+                @foreach ($rests as $index => $rest)
+                <div class="detail-item" data-rest-index="{{ $index }}">
+                    <dt class="item-label">休憩{{ $index > 0 ? $index + 1 : '' }}</dt>
                     <dd class="item-value time-input-group">
-                        <input class="time-input" type="time" value="12:00">
+                        <input class="time-input" type="time" name="rests[{{ $index }}][start_time]" value="{{ $rest['start'] }}" id="restStart{{ $index + 1 }}">
                         <span class="time-separator">～</span>
-                        <input class="time-input" type="time" value="13:00">
+                        <input class="time-input" type="time" name="rests[{{ $index }}][end_time]" value="{{ $rest['end'] }}" id="restEnd{{ $index + 1 }}">
                     </dd>
                 </div>
-                <!--★休憩2-->
-                <div class="detail-item">
-                    <dt class="item-label">休憩2</dt>
-                    <dd class="item-value time-input-group">
-                        <input class="time-input" type="time" value="" id="restStart2">
-                        <span class="time-separator">～</span>
-                        <input class="time-input" type="time" value="" id="restEnd2">
-                    </dd>
-                </div>
+                @endforeach
                 <!--★備考-->
                 <div class="detail-item">
                     <dt class="item-label">備考</dt>
                     <dd class="item-value">
-                        <textarea class="note"></textarea>
+                        <textarea class="note" name="note">{{ $attendance->note ?? '' }}</textarea>
                     </dd>
                 </div>
             </dl>
@@ -70,44 +63,26 @@
     </form>
 </div>
 
-{{-- ★JavaScriptコードを追加するセクション★ --}}
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const restStart2 = document.getElementById('restStart2');
-        const restEnd2 = document.getElementById('restEnd2');
-
-        // ページロード時にinput要素のvalueが空の場合、"--:--"が表示されないようにする
-        // これには、input要素の表示をtextに切り替えるハックを使います
-        if (restStart2.value === '') {
-            restStart2.type = 'text';
-            restStart2.placeholder = ''; // 必要であればプレースホルダーも設定しない
-        }
-        if (restEnd2.value === '') {
-            restEnd2.type = 'text';
-            restEnd2.placeholder = '';
-        }
-
-        // フォーカスが当たったときにtypeをtimeに戻す
-        restStart2.addEventListener('focus', function() {
-            this.type = 'time';
-        });
-        restEnd2.addEventListener('focus', function() {
-            this.type = 'time';
-        });
-
-        // フォーカスが外れたときにvalueが空ならtypeをtextに戻す
-        restStart2.addEventListener('blur', function() {
-            if (this.value === '') {
-                this.type = 'text';
-                this.placeholder = '';
+        // 休憩入力欄を動的に取得し、ゼロ埋めなし表示のロジックを適用
+        document.querySelectorAll('.detail-item[data-rest-index] .time-input').forEach(input => {
+            if (input.value === '') {
+                input.type = 'text';
+                input.placeholder = '';
             }
-        });
-        restEnd2.addEventListener('blur', function() {
-            if (this.value === '') {
-                this.type = 'text';
-                this.placeholder = '';
-            }
+
+            input.addEventListener('focus', function() {
+                this.type = 'time';
+            });
+
+            input.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.type = 'text';
+                    this.placeholder = '';
+                }
+            });
         });
     });
 </script>
