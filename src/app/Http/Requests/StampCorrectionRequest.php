@@ -27,8 +27,6 @@ class StampCorrectionRequest extends FormRequest
     {
         //★固定ルールと動的ルールを合わせて適用させるために、一度$rulesにおく。
         $rules = [
-            //★修正だけでなく、申請もするからidが必要
-            'id' => ['required', 'exists:attendances,id'], //attendancesテーブルのidカラムに実際に存在するかの確認
             'clock_in_time' => ['required', 'date_format:H:i'],
             'clock_out_time' => ['required', 'date_format:H:i', 'after:clock_in_time'],
             'note' => ['required', 'string', 'max:255']
@@ -57,8 +55,6 @@ class StampCorrectionRequest extends FormRequest
     public function messages()
     {
         $messages = [
-            'id.required' => '勤怠IDが特定できません',
-            'id.exists' => '存在しない勤怠情報です',
             'clock_in_time.required' => '出勤時間を入力してください',
             'clock_in_time.date_format' => '出勤時間は時刻形式で入力してください',
             'clock_out_time.required' => '退勤時間を入力してください',
@@ -107,7 +103,7 @@ class StampCorrectionRequest extends FormRequest
                     // ここでは両方存在することを前提にチェックできる
                     if ($parsedRestStart->lt($parsedClockIn) || $parsedRestEnd->gt($parsedClockOut)) {
                         $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
-                        $validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
+                        //$validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
                     }
 
                     /*//★ここで実際の勤務時間外チェックを行う

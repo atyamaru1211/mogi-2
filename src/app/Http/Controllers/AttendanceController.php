@@ -222,34 +222,4 @@ class AttendanceController extends Controller
             'nextMonth' => $nextMonth,
         ]);
     }
-
-    //★勤怠詳細画面表示
-    public function show ($id)
-    {
-        $user = Auth::user();
-        //★指定されたIDの勤怠レコードをユーザーIDと紐づけて取得。休憩情報も。
-        $attendance = Attendance::where('user_id', $user->id)
-                                ->with('rests')
-                                ->findOrFail($id);
-        //★休憩時間リストを準備 休憩の開始と終了時刻のペア配列を生成
-        $rests = [];
-        //★DBから取得した休憩データを時系列でソートして処理
-        $sortedRests = $attendance->rests->sortBy('rest_start_time');
-
-        foreach ($sortedRests as $rest) {
-            $rests[] = [
-                'start' => $rest->rest_start_time ? $rest->rest_start_time->format('H:i') : null,
-                'end' => $rest->rest_end_time ? $rest->rest_end_time->format('H:i') : null,
-            ];
-        }
-        //★休憩のフィールドを休憩＋１回分表示。
-        $numExistingRests = count($rests);
-        if ($numExistingRests === 0 || $numExistingRests > 0) {
-            $rests[] = ['start' => null, 'end' => null];
-        }
-        return view('components.detail', [
-            'attendance' => $attendance,
-            'rests' => $rests,
-        ]);
-    }
 }

@@ -12,6 +12,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\CorrectionRequestController;
 
 
 
@@ -34,9 +35,11 @@ Route::middleware(['auth', 'verified'])->group(function() {
     //★勤怠一覧画面
     Route::get('/attendance/list', [AttendanceController::class, 'list']);
     //★勤怠詳細画面
-    Route::get('/attendance/{id}', [AttendanceController::class, 'show']);
+    Route::get('/attendance/{id}', [CorrectionRequestController::class, 'show']);
     //★申請機能
-    Route::post('/stamp_correction_request', [AttendanceController::class, 'update']);
+    Route::post('/stamp_correction_request', [CorrectionRequestController::class, 'update']);
+    //★申請一覧画面
+    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'requestList']);
 });
 
 
