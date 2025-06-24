@@ -30,16 +30,19 @@ class AttendanceCorrectionRequest extends Model
         'requested_clock_out_time' => 'datetime',
     ];
 
+    //★申請したユーザー
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    //★申請対象の勤怠データ
     public function attendance()
     {
         return $this->belongsTo(Attendance::class);
     }
 
+    //★申請された休憩時間のデータ
     public function requestedRests()
     {
         return $this->hasMany(AttendanceCorrectionRequestRest::class, 'attendance_correction_request_id');

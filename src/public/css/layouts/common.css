@@ -71,9 +71,9 @@ header{
 
 .content {
     margin: 30px auto;
-    padding: 30px 80px;
+    padding: 30px 50px;
     width: 100%;
-    max-width: 960px;
+    max-width: 1050px;
 }
 
 .page-title {
@@ -131,7 +131,7 @@ header{
     transform: rotate(180deg);
 }
 
-/* 勤怠データテーブル */
+/* 勤怠データテーブル 
 .app-table {
     width: 100%;
     margin-top: 20px;
@@ -143,15 +143,14 @@ header{
     padding: 10px 15px;
     white-space: nowrap;
     text-align: left;
+    color: #737373;
 }
 
 .app-table th {
-    color: #737373;
     border-bottom: 3px solid #E1E1E1;
 }
 
 .app-table td {
-    color: #737373;
     border-bottom: 2px solid #E1E1E1;
     font-weight: bold;
 }
@@ -165,3 +164,4 @@ header{
     text-decoration: none;
     color: #000000;
 }
+    */

@@ -2,6 +2,10 @@
 
 @section('title', '勤怠一覧')
 
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/components/list.css')  }}">
+@endsection
+
 @section('body_class', 'has-background')
 
 @section('content')

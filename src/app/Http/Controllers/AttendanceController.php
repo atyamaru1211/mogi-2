@@ -157,6 +157,7 @@ class AttendanceController extends Controller
     public function list(Request $request)
     {
         $user = Auth::user();
+
         $currentMonth = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::today();
         //★選択された月の初日と最終日を取得
         $firstDayOfMonth = $currentMonth->copy()->startOfMonth();

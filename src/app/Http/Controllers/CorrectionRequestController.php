@@ -54,7 +54,7 @@ class CorrectionRequestController extends Controller
                                                         ->first();
         }
 
-        return view('components.detail', [
+        return view('user.detail', [
             'attendance' => $attendance,
             'rests' => $rests,
             'hasPendingCorrectionRequest' => $hasPendingCorrectionRequest,
@@ -131,20 +131,34 @@ class CorrectionRequestController extends Controller
     public function requestList(Request $request)
     {
         $user = Auth::user();
-        $pendingRequests = AttendanceCorrectionRequest::where('user_id', $user->id)
+
+        $activeTab = $request->query('tab', 'pending');
+        //?★表示するリクエストを格納するコレクション
+        $requests = collect();
+        //?★表示するステータステキスト
+        $statusText = '';
+
+        if ($activeTab === 'pending') {
+            $requests = AttendanceCorrectionRequest::where('user_id', $user->id)
                                                     ->where('status', 'pending')
                                                     ->with('user')
                                                     ->orderBy('created_at', 'desc')
                                                     ->get();
-        $approvedRequests = AttendanceCorrectionRequest::where('user_id', $user->id)
+            $statusText = '承認待ち';
+        } else {
+            $requests = AttendanceCorrectionRequest::where('user_id', $user->id)
                                                     ->where('status', 'approved')
                                                     ->with('user')
                                                     ->orderBy('created_at', 'desc')
                                                     ->get();
+            $statusText = '承認済み';
+        }
         
         return view('components.request_list', [
-            'pendingRequests' => $pendingRequests,
-            'approvedRequests' => $approvedRequests,
+            'requests' => $requests,
+            'activeTab' => $activeTab,
+            'statusText' => $statusText,
+            'is_admin_view' => false,
         ]);
     }
 }

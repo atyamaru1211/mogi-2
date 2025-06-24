@@ -13,6 +13,7 @@ use Illuminate\Auth\Events\Verified;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\CorrectionRequestController;
+use App\Http\Controllers\Admin\AdminCorrectionRequestController;
 
 
 
@@ -27,6 +28,7 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middlew
 // 会員登録ルート
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
+
 // 勤怠画面 - 認証済みかつメール認証済みユーザーのみアクセス可能
 Route::middleware(['auth', 'verified'])->group(function() {
     //★出勤登録画面
@@ -35,13 +37,62 @@ Route::middleware(['auth', 'verified'])->group(function() {
     //★勤怠一覧画面
     Route::get('/attendance/list', [AttendanceController::class, 'list']);
     //★勤怠詳細画面
-    Route::get('/attendance/{id}', [CorrectionRequestController::class, 'show']);
+    //Route::get('/attendance/{id}', [CorrectionRequestController::class, 'show']);
     //★申請機能
     Route::post('/stamp_correction_request', [CorrectionRequestController::class, 'update']);
     //★申請一覧画面
-    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'requestList']);
+    //Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'requestList']);
 });
 
+
+
+// --- ★★★共有パスの認証済みルート★★★ ---
+Route::middleware(['auth:web,admin', 'verified'])->group(function () { // ★重要: authミドルウェアにwebとadminガードを両方指定
+
+    // /attendance/{id} というパスは一つだけ定義し、クロージャ内で分岐
+    Route::get('/attendance/{id}', function ($id) {
+        if (Auth::guard('admin')->check()) {
+            // 管理者としてログインしていれば、管理者のコントローラーを呼び出す
+            return app(AdminAttendanceController::class)->show($id);
+        } else { // 一般ユーザーとしてログインしていれば
+            return app(CorrectionRequestController::class)->show($id);
+        }
+    });
+
+    // /stamp_correction_request/list というパスも一つだけ定義し、クロージャ内で分岐
+    Route::get('/stamp_correction_request/list', function (Request $request) {
+        if (Auth::guard('admin')->check()) {
+            // 管理者としてログインしていれば、管理者の申請一覧コントローラーを呼び出す
+            return app(AdminCorrectionRequestController::class)->requestList($request); 
+        } else { // 一般ユーザーとしてログインしていれば
+            return app(CorrectionRequestController::class)->requestList($request);
+        }
+    });
+});
+
+
+
+// --- 管理者向けルート ---
+
+// ... 管理者ログインルート (AdminLoginController 関連) ...
+Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm']);
+Route::post('/admin/login', [AdminLoginController::class, 'login']);
+
+// 認証必須の管理者向けルート
+Route::middleware('auth:admin')->group(function () {
+    // ★勤怠一覧画面（管理者）★
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'list']);
+    //★勤怠詳細画面表示
+    //Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show']);
+    //★勤怠修正ルート
+    Route::patch('/admin/attendance/update/{id}', [AdminAttendanceController::class, 'update']);
+    //★修正申請詳細画面表示★
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminCorrectionRequestController::class, 'showApprovalForm']);
+    //★修正申請承認機能
+    Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminCorrectionRequestController::class, 'approve']);
+    //★ログアウト
+    Route::post('/admin/logout', [AdminLoginController::class, 'logout']);
+});
 
 
 
@@ -132,21 +183,3 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id) {
 })->middleware(['signed'])->name('verification.verify');
 
 
-// --- 管理者向けルート ---
-Route::prefix('admin')->group(function () {
-    // ... 管理者ログインルート (AdminLoginController 関連) ...
-    Route::get('/login', [AdminLoginController::class, 'showLoginForm']);
-    Route::post('/login', [AdminLoginController::class, 'login']);
-    // 認証必須の管理者向けルート
-    Route::middleware('auth:admin')->group(function () {
-        // 管理者ダッシュボード（オプション）
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard'); // 仮のビュー
-        });
-
-        // ★勤怠一覧画面（管理者）★
-        Route::get('/attendance/list', [AdminAttendanceController::class, 'list']);
-
-        Route::post('/logout', [AdminLoginController::class, 'logout']);
-    });
-});

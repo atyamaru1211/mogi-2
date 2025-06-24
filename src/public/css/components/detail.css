@@ -89,6 +89,11 @@
     color: #FF000080;
 }
 
+.alert-success {
+    color: #0073CC;
+}
+
+
 .error-message {
     margin: 0;
     padding-left: 40px;

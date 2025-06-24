@@ -105,33 +105,6 @@ class StampCorrectionRequest extends FormRequest
                         $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
                         //$validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
                     }
-
-                    /*//★ここで実際の勤務時間外チェックを行う
-                    //★まずは出勤、退勤時間が両方入力されている場合
-                    if ($parsedClockIn && $parsedClockOut) {
-                        //休憩開始が出勤時刻より前、または休憩終了が退勤時刻より後
-                        if ($parsedRestStart->lt($parsedClockIn) || $parsedRestEnd->gt($parsedClockOut)) {
-                            //★ここでエラーメッセージ
-                            $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
-                            $validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
-                        }
-                    }
-                    //★出勤時間だけがある場合（退勤は未入力）
-                    else if ($parsedClockIn && !$parsedClockOut) {
-                        //★休憩開始が出勤時間より前ならエラー
-                        if ($parsedRestStart->lt($parsedClockIn)) {
-                            $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
-                            $validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
-                        }
-                    }
-                    //★退勤時間だけがある場合（出勤時間は未入力）
-                    else if (!$parsedClockIn && $parsedClockOut) {
-                        //★休憩終了が退勤時間より後ならエラー
-                        if ($parsedRestEnd->gt($parsedClockOut)) {
-                            $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
-                            $validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
-                        }
-                    }*/
                 }
             }
         });
