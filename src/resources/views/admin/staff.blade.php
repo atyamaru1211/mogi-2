@@ -22,17 +22,14 @@
             </tr>
         </thead>
         <tbody>
-            <!--★ダミーデータ-->
+            @forelse ($users as $user)
             <tr>
-                <td>西　玲奈</td>
-                <td>reina@email.com</td>
-                <td><a class="detail-link" href="#">詳細</a></td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td><a class="detail-link" href="/admin/attendance/staff/{{ $user->id }}">詳細</a></td>
             </tr>
-            <tr>
-                <td>山田 太郎</td>
-                <td>taro.y@coachtech.com</td>
-                <td><a href="#" class="detail-link">詳細</a></td>
-            </tr>
+            @empty
+            @endforelse
         </tbody>
     </table>
 </div>

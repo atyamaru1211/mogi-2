@@ -1,3 +1,38 @@
+/* 勤怠データテーブル */
+.app-table {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+}
+
+.app-table th, .app-table td {
+    padding: 10px 15px;
+    white-space: nowrap;
+    text-align: left;
+    color: #737373;
+}
+
+.app-table th {
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.app-table td {
+    border-bottom: 2px solid #E1E1E1;
+    font-weight: bold;
+}
+
+.app-table th:nth-child(1),
+.app-table td:nth-child(1) {
+    padding-left: 30px;
+}
+
+.detail-link {
+    text-decoration: none;
+    color: #000000;
+}
+
+
 .staff-table th:nth-child(1),
 .staff-table td:nth-child(1) {
     width: 25%;

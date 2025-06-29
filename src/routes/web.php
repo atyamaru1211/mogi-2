@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\CorrectionRequestController;
 use App\Http\Controllers\Admin\AdminCorrectionRequestController;
+use App\Http\Controllers\Admin\AdminStaffController;
 
 
 
@@ -92,6 +93,10 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminCorrectionRequestController::class, 'approve']);
     //★ログアウト
     Route::post('/admin/logout', [AdminLoginController::class, 'logout']);
+    //★スタッフ一覧画面表示
+    Route::get('/admin/staff/list', [AdminStaffController::class, 'list']);
+    //★スタッフ別勤怠一覧画面表示
+    Route::get('/admin/attendance/staff/{id}', [AdminStaffController::class, 'attendanceList']);
 });
 
 

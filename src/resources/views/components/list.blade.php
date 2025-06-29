@@ -10,11 +10,19 @@
 
 @section('content')
 <div class="content">
-    <h1 class="page-title">勤怠一覧</h1>
+    <h1 class="page-title">
+        @if (($is_admin_view ?? false) && ($userForDisplay ?? null))
+            {{ $userForDisplay->name }}さんの勤怠
+        @else
+            勤怠一覧
+        @endif
+    </h1>
     <!--★月のページネーション-->
     <div class="navigation">
         <!--★前月へのリンク-->
-        <a class="nav-arrow" href="/attendance/list?month={{ $prevMonth->format('Y-m') }}">
+        <a class="nav-arrow" href="{{ ($is_admin_view ?? false) && ($targetUserId ?? null)
+            ? '/admin/attendance/staff/' . $targetUserId . '?month=' . $prevMonth->format('Y-m')
+            : '/attendance/list?month=' . $prevMonth->format('Y-m') }}">
             <img class="arrow-icon--prev" src="{{ asset('img/arrow.png') }}" alt="左矢印">前月
         </a>
         <!--★現在の月を表示-->
@@ -23,7 +31,9 @@
             {{ $currentMonth->format('Y/m') }}
         </span>
         <!--★翌月へのリンク-->
-        <a class="nav-arrow" href="/attendance/list?month={{ $nextMonth->format('Y-m') }}">翌月
+        <a class="nav-arrow" href="{{ ($is_admin_view ?? false) && ($targetUserId ?? null)
+            ? '/admin/attendance/staff/' . $targetUserId . '?month=' . $nextMonth->format('Y-m')
+            : '/attendance/list?month=' . $nextMonth->format('Y-m') }}">翌月
             <img class="arrow-icon--next" src="{{ asset('img/arrow.png') }}" alt="右矢印">
         </a>
     </div>
