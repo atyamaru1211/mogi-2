@@ -97,6 +97,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/staff/list', [AdminStaffController::class, 'list']);
     //★スタッフ別勤怠一覧画面表示
     Route::get('/admin/attendance/staff/{id}', [AdminStaffController::class, 'attendanceList']);
+    //★CSV出力機能
+    Route::get('/admin/attendance/staff/{id}/export', [AdminStaffController::class, 'export']);
 });
 
 

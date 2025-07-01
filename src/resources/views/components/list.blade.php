@@ -70,5 +70,13 @@
             @endforeach
         </tbody>
     </table>
+
+    <!--★CSV出力機能ボタン-->
+    @if (($is_admin_view ?? false) && ($targetUserId ?? null))
+    <div class="export-section">
+        <!--★CSVはGEｔリクエストで行うためaタグを使用　現在のユーザーＩＤと月をパスとクエリパラメータとして渡す-->
+        <a class="export-button" href="/admin/attendance/staff/{{ $targetUserId }}/export?month={{ $currentMonth->format('Y-m') }}">CSV出力</a>
+    </div>
+    @endif
 </div>
 @endsection

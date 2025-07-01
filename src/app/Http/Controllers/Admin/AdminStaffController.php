@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminStaffController extends Controller
 {
@@ -96,5 +97,95 @@ class AdminStaffController extends Controller
             'is_admin_view' => true,//★管理者のビューであることを示す
             'targetUserId' => $user->id,//★現在ターゲットにしているユーザーIDを渡す
         ]);
+    }
+
+    //★CSV出力機能
+    public function export(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        //★対象月を設定（attendanceListと同様、monthパラメータが現在の月を使用）
+        $currentMonth = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::today();
+        $firstDayOfMonth = $currentMonth->copy()->startOfMonth();
+        $lastDayOfMonth = $currentMonth->copy()->endOfMonth();
+
+        //★勤怠データを取得
+        $attendanceDate = Attendance::where('user_id', $user->id)
+                                    ->whereBetween('date', [$firstDayOfMonth, $lastDayOfMonth])
+                                    ->with('rests')
+                                    ->orderBy('date', 'asc')
+                                    ->get();
+
+        //★CSVヘッダーの定義
+        //★UIのカラム名に合わせる
+        $csvHeader = [
+            '日付', '曜日', '出勤', '退勤', '休憩', '合計'
+        ];
+
+        //★ファイル名→ユーザー名と月を含める
+        $fileName = sprintf('%sさんの勤怠_%s.csv', $user->name, $currentMonth->format('Y_m'));
+
+        $response = new StreamedResponse(function () use ($csvHeader, $attendanceDate, $firstDayOfMonth, $lastDayOfMonth) {
+            $file = fopen('php://output', 'w');
+
+            // ヘッダーの文字コードをSJIS-winに変換
+            mb_convert_variables('SJIS-win', 'UTF-8', $csvHeader);
+            fputcsv($file, $csvHeader); // 変換後のヘッダーを書き込む
+
+            //★月の全日付を網羅し、勤怠データがない日は空白とする
+            $day = $firstDayOfMonth->copy();
+            $attendancesMap = $attendanceDate->keyBy(function($item) {
+                return $item->date->format('Y-m-d');
+            });
+
+            while ($day->lte($lastDayOfMonth)) {
+                $dateString = $day->format('Y-m-d');
+                $attendance = $attendancesMap->get($dateString);
+
+                $row = [
+                    $day->format('m/d'),//★日付
+                    ['日', '月', '火', '水', '木', '金', '土'][$day->dayOfWeek],//★曜日
+                    '',//★出勤時間
+                    '',//★退勤時間
+                    '',//★休憩時間
+                    '',//★合計勤務時間
+                ];
+
+                if ($attendance) {
+                    $row[2] = $attendance->clock_in_time ? $attendance->clock_in_time->format('H:i') : '';//★出勤
+                    $row[3] = $attendance->clock_out_time ? $attendance->clock_out_time->format('H:i') : '';//★退勤
+
+                    //★休憩時間の計算
+                    $totalRestSeconds = 0;
+                    foreach ($attendance->rests as $rest) {
+                        if ($rest->rest_start_time && $rest->rest_end_time) {
+                            $totalRestSeconds += $rest->rest_end_time->diffInSeconds($rest->rest_start_time);
+                        }
+                    }
+                    $row[4] = sprintf('%d:%02d', floor($totalRestSeconds / 3600), floor(($totalRestSeconds % 3600) / 60));//★休憩
+
+                    //★合計勤務時間の計算
+                    $actualWorkSeconds = 0;
+                    if ($attendance->clock_in_time && $attendance->clock_out_time) {
+                        $totalWorkSeconds = $attendance->clock_out_time->diffInSeconds($attendance->clock_in_time);
+                        $actualWorkSeconds = $totalWorkSeconds - $totalRestSeconds;
+                    }
+                    $row[5] = sprintf('%d:%02d', floor($actualWorkSeconds / 3600), floor(($actualWorkSeconds % 3600) / 60));//★合計
+                }
+
+                //★Windows　Excelでの文字化け対策
+                mb_convert_variables('SJIS-win', 'UTF-8', $row);
+                fputcsv($file, $row);
+
+                $day->addDay();
+            }
+
+            fclose($file);
+        }, 200, [
+            'Content-Type' => 'text/csv; charset=SJIS-win',//★SJIS-winを指定
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
+
+        return $response;
     }
 }

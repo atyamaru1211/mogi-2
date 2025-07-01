@@ -31,3 +31,19 @@
     text-decoration: none;
     color: #000000;
 }
+
+
+.export-section {
+    text-align: right;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.export-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 5px;
+}
