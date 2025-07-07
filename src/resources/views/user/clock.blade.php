@@ -45,7 +45,7 @@
                 @if ($status == '出勤中')
                     <form action="/attendance" method="post">
                         @csrf
-                        <input type="hidden" name="action" value="break_start">
+                        <input type="hidden" name="action" value="rest_start">
                         <button class="btn btn--large rest" type="submit">休憩入</button>
                     </form>
                 @endif
@@ -53,7 +53,7 @@
                 @if ($status == '休憩中')
                     <form action="/attendance" method="post">
                         @csrf
-                        <input type="hidden" name="action" value="break_end">
+                        <input type="hidden" name="action" value="rest_end">
                         <button class="btn btn--large rest" type="submit">休憩戻</button>
                     </form>
                 @endif

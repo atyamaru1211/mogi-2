@@ -21,6 +21,7 @@ class AttendanceController extends Controller
         //★ユーザーの今日の勤怠レコードを取得
         $attendance = Attendance::where('user_id', $user->id)
                                 ->whereDate('date', $today)
+                                ->with('rests')
                                 ->first();
         
         //★勤怠ステータスの初期値
@@ -33,9 +34,7 @@ class AttendanceController extends Controller
                 $status = '退勤済';
             } elseif ($attendance->clock_in_time) {
                 //★出勤時刻はあるが退勤時刻がない場合→休憩中の判定
-                $latestRest = Rest::where('attendance_id', $attendance->id)
-                                    ->latest('rest_start_time')
-                                    ->first();
+                $latestRest = $attendance->rests->sortByDesc('rest_start_time')->first();
                 if ($latestRest && is_null($latestRest->rest_end_time)) {
                     //★最新の休憩レコードが有、休憩終了時刻がない場合→同じく休憩中の判定
                     $status = '休憩中';
@@ -47,6 +46,8 @@ class AttendanceController extends Controller
         }
         //★$statusが勤務外のままなら、出勤レコードなし
 
+        \Log::info('Attendance Index - Status: ' . $status . ' | Clock Out Time: ' . ($attendance ? $attendance->clock_out_time : 'N/A'));
+        
         //Viewに渡す
         return view('user.clock', [
             'status' => $status,
@@ -81,16 +82,16 @@ class AttendanceController extends Controller
                 ]);
                 return redirect('/attendance');
 
-            case 'break_start': //休憩入り
+            case 'rest_start': //休憩入り
                 //勤務中じゃないと休憩できない
                 if (!$attendance || $attendance->clock_out_time) {
                     return redirect('/attendance');
                 }
-                //★休憩中の場合は二重休憩を防ぐ
-                $latestRest = Rest::where('attendance_id', $attendance->id)
-                                    ->latest('rest_start_time')
+                //★現在進行形の休憩が存在するか確認
+                $activeRest = Rest::where('attendance_id', $attendance->id)
+                                    ->whereNull('rest_end_time')
                                     ->first();
-                if ($latestRest && is_null($latestRest->rest_end_time)) {
+                if ($activeRest) {
                     return redirect('/attendance');
                 }
                 Rest::create([
@@ -99,7 +100,7 @@ class AttendanceController extends Controller
                 ]);
                 return redirect('/attendance');
             
-            case 'break_end'://休憩戻り
+            case 'rest_end'://休憩戻り
                 //休憩中でなければ休憩終了できない
                 if (!$attendance || $attendance->clock_out_time) {
                     return redirect('attendance');
@@ -132,6 +133,9 @@ class AttendanceController extends Controller
 
                 //★退勤時刻を記録
                 $attendance->update(['clock_out_time' => Carbon::now()]);
+
+                $updatedAttendance = Attendance::find($attendance->id); // データベースから再取得して確認
+                \Log::info('PunchOut - updated attendance clock_out_time: ' . $updatedAttendance->clock_out_time);
 
                 //★合計休憩時間を計算
                 $totalRestSeconds = 0;

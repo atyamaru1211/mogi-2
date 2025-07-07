@@ -8,17 +8,20 @@ use App\Models\Admin; //★ Adminモデルをuse
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
+        // 管理者ユーザー1
         Admin::create([
-            'name' => '管理者1',
+            'name' => '管理者ユーザー1',
             'email' => 'admin1@example.com',
-            'password' => Hash::make('password456'),
+            'password' => Hash::make('password'),
+        ]);
+
+        // 管理者ユーザー2
+        Admin::create([
+            'name' => '管理者ユーザー2',
+            'email' => 'admin2@example.com',
+            'password' => Hash::make('password'),
         ]);
     }
 }
