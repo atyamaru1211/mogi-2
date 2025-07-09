@@ -99,11 +99,15 @@ class StampCorrectionRequest extends FormRequest
                     $parsedRestStart = Carbon::parse($restStart);
                     $parsedRestEnd = Carbon::parse($restEnd);
 
-                    // ★簡略化: clock_in_time と clock_out_time は required なので、
-                    // ここでは両方存在することを前提にチェックできる
-                    if ($parsedRestStart->lt($parsedClockIn) || $parsedRestEnd->gt($parsedClockOut)) {
+                    // 休憩開始時間が勤務開始時間より前、または勤務終了時間より後の場合
+                    // ★★★ ここを修正: or $parsedRestStart->gt($parsedClockOut) を追加 ★★★
+                    if ($parsedRestStart->lt($parsedClockIn) || $parsedRestStart->gt($parsedClockOut)) {
                         $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
-                        //$validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
+                    }
+                    // 休憩終了時間が勤務開始時間より前、または勤務終了時間より後の場合
+                    // ★★★ ここを修正: $parsedRestEnd->lt($parsedClockIn) を追加（念のため） ★★★
+                    if ($parsedRestEnd->lt($parsedClockIn) || $parsedRestEnd->gt($parsedClockOut)) {
+                        $validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
                     }
                 }
             }
