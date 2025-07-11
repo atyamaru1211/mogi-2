@@ -1,4 +1,4 @@
-.PHONY: init build up down migrate seed test
+.PHONY: init build up down migrate seed test fresh restart cache stop
 
 init:
 	docker-compose up -d --build
@@ -7,6 +7,8 @@ init:
 	docker-compose exec php php artisan key:generate
 	docker-compose exec php php artisan storage:link
 	docker-compose exec php chmod -R 777 storage bootstrap/cache
+	@echo "Waiting for MySQL to be ready..."
+	sleep 10
 	@make fresh
 
 fresh:

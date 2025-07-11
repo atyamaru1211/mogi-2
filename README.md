@@ -1,7 +1,5 @@
 # 勤怠管理システム
 
-本プロジェクトは、ユーザーの勤怠を管理するためのシステムです。
-
 ## 環境構築
 
 1.  Docker Desktop アプリケーションを起動します。
@@ -11,16 +9,7 @@
     make init
     ```
 
-    ※`make init` 実行後、`.env` ファイルが作成されます。データベース接続情報、メール設定は、**手動で`.env`ファイルを編集して設定**してください。
-3.  .envに以下の環境変数を追加
-``` text
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=laravel_db
-DB_USERNAME=laravel_user
-DB_PASSWORD=laravel_pass
-```
+    ※`make init` 実行後、`.env` ファイルが作成されます。メール設定は、**手動で`.env`ファイルを編集して設定**してください。
 
 ## メール認証
 
