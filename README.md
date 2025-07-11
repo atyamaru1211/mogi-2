@@ -13,7 +13,8 @@
 3.  以下のコマンドでデータベースのマイグレーションとシーディングを実行します。
 
     ```bash
-    docker compose exec php php artisan migrate:fresh --seed
+    docker-compose exec php bash
+    php artisan migrate:fresh --seed
     ```
 
 ## メール認証
