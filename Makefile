@@ -9,7 +9,6 @@ init:
 	docker-compose exec php chmod -R 777 storage bootstrap/cache
 	@echo "Waiting for MySQL to be ready..."
 	sleep 10
-	@make fresh
 
 fresh:
 	docker compose exec php php artisan migrate:fresh --seed

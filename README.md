@@ -10,6 +10,11 @@
     ```
 
     ※`make init` 実行後、`.env` ファイルが作成されます。メール設定は、**手動で`.env`ファイルを編集して設定**してください。
+3.  以下のコマンドでデータベースのマイグレーションとシーディングを実行します。
+
+    ```bash
+    docker compose exec php php artisan migrate:fresh --seed
+    ```
 
 ## メール認証
 
