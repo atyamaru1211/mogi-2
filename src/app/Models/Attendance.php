@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Rest;
+use App\Models\AttendanceCorrectionRequest;
 
 class Attendance extends Model
 {
@@ -34,5 +35,11 @@ class Attendance extends Model
     public function rests()
     {
         return $this->hasMany(Rest::class);
+    }
+
+    public function correctionRequests()
+    {
+        return $this->hasOne(AttendanceCorrectionRequest::class, 'attendance_id')
+                    ->where('status', 'pending');
     }
 }

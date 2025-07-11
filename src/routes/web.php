@@ -37,12 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::post('/attendance', [AttendanceController::class, 'store']);
     //★勤怠一覧画面
     Route::get('/attendance/list', [AttendanceController::class, 'list']);
-    //★勤怠詳細画面
-    //Route::get('/attendance/{id}', [CorrectionRequestController::class, 'show']);
     //★申請機能
     Route::post('/stamp_correction_request', [CorrectionRequestController::class, 'update']);
-    //★申請一覧画面
-    //Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'requestList']);
 });
 
 

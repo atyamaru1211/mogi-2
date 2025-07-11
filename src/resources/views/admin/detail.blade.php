@@ -17,28 +17,22 @@
             {{ session('success') }}
         </div>
     @endif
-    <!--★不要であれば消す-->
-    @if (session('error'))
-        <div class="alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
 
-    <div class="detail-card">
-        <form action="{{ $is_for_approval ? '/stamp_correction_request/approve/' . $attendanceCorrectionRequest->id : '/admin/attendance/update/' . $attendance->id }}" method="post">
-            @csrf
-            <!--★承認処理ではPATCH不要。直接修正では必要-->
-            @unless($is_for_approval)
-                @method('patch')
-            @endunless
+    <form action="{{ $is_for_approval ? '/stamp_correction_request/approve/' . $attendanceCorrectionRequest->id : '/admin/attendance/update/' . $attendance->id }}" method="post">
+        @csrf
+        <!--★承認処理ではPATCH不要。直接修正では必要-->
+        @unless($is_for_approval)
+            @method('patch')
+        @endunless
 
-            <!--★勤怠IDまたは修正申請IDを隠しフィールドで送信-->
-            @if ($is_for_approval)
-                <input type="hidden" name="correction_request_id" value="{{ $attendanceCorrectionRequest->id }}">
-            @else
-                <input type="hidden" name="id" value="{{ $attendance->id }}">
-            @endif
+        <!--★勤怠IDまたは修正申請IDを隠しフィールドで送信-->
+        @if ($is_for_approval)
+            <input type="hidden" name="correction_request_id" value="{{ $attendanceCorrectionRequest->id }}">
+        @else
+            <input type="hidden" name="id" value="{{ $attendance->id }}">
+        @endif
 
+        <div class="detail-card">
             <dl class="detail-list">
                 <!--★名前-->
                 <div class="detail-item">
@@ -147,26 +141,24 @@
                     </div>
                 @endif
             </dl>
-
-            <div class="submit-button">
-                @if ($is_for_approval)
-                    @if ($attendanceCorrectionRequest->status === 'pending')
-                        <button class="btn btn--medium" type="submit">承認</button>
-                    @else
-                        <button class="btn btn--medium" type="button" disabled>承認済み</button>
-                    @endif
+        </div>
+        <div class="submit-button">
+            @if ($is_for_approval)
+                @if ($attendanceCorrectionRequest->status === 'pending')
+                    <button class="btn btn--medium" type="submit">承認</button>
                 @else
-                    <button class="btn btn--medium" type="submit">修正</button>
+                    <button class="btn btn--medium" type="button" disabled>承認済み</button>
                 @endif
-            </div>
-        </form>
-    </div>
+            @else
+                <button class="btn btn--medium" type="submit">修正</button>
+            @endif
+        </div>
+    </form>
 </div>
 
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 休憩入力欄を動的に取得し、ゼロ埋めなし表示のロジックを適用
         document.querySelectorAll('.detail-item[data-rest-index] .time-input').forEach(input => {
             if (input.value === '') {
                 input.type = 'text';
