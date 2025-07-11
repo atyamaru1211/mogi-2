@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class RegisterTest extends TestCase
 {
-    use RefreshDatabase;//★各テストメソッドの前にマイグレーションを実行し、テスト後にロールバックする
+    use RefreshDatabase;
 
     // 名前が未入力の場合、バリデーションメッセージが表示される
     public function test_register_user_validate_name()

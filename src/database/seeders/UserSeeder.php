@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash; // Hashファサードを使用
-use App\Models\User; //★ Userモデルをuse
-use Carbon\Carbon; // ★この行を追加★
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use Carbon\Carbon;
 
 
 class UserSeeder extends Seeder
@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
             'name' => '一般ユーザー1',
             'email' => 'general1@example.com',
             'password' => Hash::make('password'),
-            'email_verified_at' => Carbon::now(), // ★この行を追加★
+            'email_verified_at' => Carbon::now(),
         ]);
 
         // 一般ユーザー2
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'name' => '一般ユーザー2',
             'email' => 'general2@example.com',
             'password' => Hash::make('password'),
-            'email_verified_at' => Carbon::now(), // ★この行を追加★
+            'email_verified_at' => Carbon::now(),
         ]);
     }
 }

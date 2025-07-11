@@ -95,17 +95,17 @@ class AttendanceCorrectionRequestTest extends TestCase
 
         $response = $this->get('/stamp_correction_request/approve/' . $this->correctionRequest->id);
         $response->assertStatus(200);
-        $response->assertSeeText($this->user->name); // 申請したユーザー名が表示される
-        $response->assertSeeText($this->commonClockInTime); // 申請された出勤時刻が表示される
-        $response->assertSeeText($this->commonClockOutTime); // 申請された退勤時刻が表示される
-        $response->assertSeeText($this->commonNote); // ★申請理由が表示される
+        $response->assertSeeText($this->user->name);
+        $response->assertSeeText($this->commonClockInTime);
+        $response->assertSeeText($this->commonClockOutTime);
+        $response->assertSeeText($this->commonNote);
 
-        $response = $this->get('/stamp_correction_request/list?tab=pending'); // 承認待ちタブにアクセス
+        $response = $this->get('/stamp_correction_request/list?tab=pending');
         $response->assertStatus(200);
-        $response->assertSeeText($this->user->name); // 申請したユーザー名が表示される
-        $response->assertSeeText($this->commonNote); // 申請理由が表示される
-        $response->assertSeeText('承認待ち'); // 状態が承認待ちであること
-        $response->assertSeeText($this->correctionRequest->requested_date->format('Y/m/d')); // 対象日時が表示される
+        $response->assertSeeText($this->user->name);
+        $response->assertSeeText($this->commonNote);
+        $response->assertSeeText('承認待ち');
+        $response->assertSeeText($this->correctionRequest->requested_date->format('Y/m/d'));
     }
 
     // 「承認待ち」にログインユーザーが行った申請が全て表示されていること

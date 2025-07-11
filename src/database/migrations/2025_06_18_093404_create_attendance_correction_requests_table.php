@@ -22,7 +22,7 @@ class CreateAttendanceCorrectionRequestsTable extends Migration
             $table->timestamp('requested_clock_out_time')->nullable();
             $table->time('requested_total_rest_time')->nullable();
             $table->text('requested_note');
-            $table->string('status', 50)->default('pending'); //★もし値が何もなければ自動でpendingになる
+            $table->string('status', 50)->default('pending');
             $table->timestamps();
         });
     }

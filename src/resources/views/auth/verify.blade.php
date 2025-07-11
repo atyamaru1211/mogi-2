@@ -1,4 +1,4 @@
-@extends('layouts.app')<!--★-->
+@extends('layouts.app')
 
 @section('title', 'メール認証')
 
@@ -9,13 +9,11 @@
 @section('content')
 <div class="verify-notice">
     <div class="verify-notice__inner">
-        <!--★ログイン時、未承認でリダイレクトされた場合のメッセージ-->
         @if (session('unverified_email_message'))
             <div class="alert alert-danger">
                 {{ session('unverified_email_message') }}
             </div>
         @endif
-        <!--★メール再送成功メッセージ-->
         @if (session('status'))
             <div class="alert alert-success">
                 {{ session('status') }}

@@ -1,4 +1,4 @@
-@extends('layouts.app')<!--★-->
+@extends('layouts.app')
 
 @section('title', '勤怠一覧')
 
@@ -17,27 +17,22 @@
             勤怠一覧
         @endif
     </h1>
-    <!--★月のページネーション-->
     <div class="navigation">
-        <!--★前月へのリンク-->
         <a class="nav-arrow" href="{{ ($is_admin_view ?? false) && ($targetUserId ?? null)
             ? '/admin/attendance/staff/' . $targetUserId . '?month=' . $prevMonth->format('Y-m')
             : '/attendance/list?month=' . $prevMonth->format('Y-m') }}">
             <img class="arrow-icon--prev" src="{{ asset('img/arrow.png') }}" alt="左矢印">前月
         </a>
-        <!--★現在の月を表示-->
         <span class="current">
             <img class="calendar-icon" src="{{ asset('img/nav.png') }}" alt="カレンダー">
             {{ $currentMonth->format('Y/m') }}
         </span>
-        <!--★翌月へのリンク-->
         <a class="nav-arrow" href="{{ ($is_admin_view ?? false) && ($targetUserId ?? null)
             ? '/admin/attendance/staff/' . $targetUserId . '?month=' . $nextMonth->format('Y-m')
             : '/attendance/list?month=' . $nextMonth->format('Y-m') }}">翌月
             <img class="arrow-icon--next" src="{{ asset('img/arrow.png') }}" alt="右矢印">
         </a>
     </div>
-    <!--★勤怠データテーブル-->
     <table class="app-table">
         <thead>
             <tr>
@@ -71,10 +66,8 @@
         </tbody>
     </table>
 
-    <!--★CSV出力機能ボタン-->
     @if (($is_admin_view ?? false) && ($targetUserId ?? null))
     <div class="export-section">
-        <!--★CSVはGEｔリクエストで行うためaタグを使用　現在のユーザーＩＤと月をパスとクエリパラメータとして渡す-->
         <a class="export-button" href="/admin/attendance/staff/{{ $targetUserId }}/export?month={{ $currentMonth->format('Y-m') }}">CSV出力</a>
     </div>
     @endif

@@ -25,30 +25,24 @@ class StampCorrectionRequest extends FormRequest
      */
     public function rules()
     {
-        //★固定ルールと動的ルールを合わせて適用させるために、一度$rulesにおく。
         $rules = [
             'clock_in_time' => ['required', 'date_format:H:i'],
             'clock_out_time' => ['required', 'date_format:H:i', 'after:clock_in_time'],
             'note' => ['required', 'string', 'max:255']
         ];
 
-        //★動的なルール生成。実際に存在する休憩データだけをループ
         foreach ($this->input('rests', []) as $index => $rest) {
-            //★例　$indexが0なら、rests.0.start_timeというキーのルールが追加される
             $restStartTimeRules = ['nullable', 'date_format:H:i'];
             $restEndTimeRules = ['nullable', 'date_format:H:i', 'after:rests.'.$index.'.start_time'];
-            //★休憩開始と終了がどちらか片方だけ入力されている場合はエラー
             if (isset($rest['start_time']) && !isset($rest['end_time'])) {
                 $restEndTimeRules[] = 'required_with:rests.'.$index.'.start_time';
             }
             if (!isset($rest['start_time']) && isset($rest['end_time'])) {
                 $restStartTimeRules[] = 'required_with:rests.'.$index.'.end_time';
             }
-            // 最終的なルールを$rules配列に追加
             $rules["rests.{$index}.start_time"] = $restStartTimeRules;
             $rules["rests.{$index}.end_time"] = $restEndTimeRules;
         }
-        //★全てのルールを定義し終えたあとにreturnする。
         return $rules;
     }
 
@@ -65,7 +59,6 @@ class StampCorrectionRequest extends FormRequest
             'note.max' => '備考は255文字以内で入力してください',
         ];
 
-        //★休憩時間のバリデーションメッセージを動的に追加
         foreach ($this->input('rests', []) as $index => $rest) {
             $messages["rests.{$index}.start_time.date_format"] = '休憩開始時間は時刻形式で入力してください';
             $messages["rests.{$index}.end_time.date_format"] = '休憩終了時間は時刻形式で入力してください';
@@ -77,35 +70,25 @@ class StampCorrectionRequest extends FormRequest
         return $messages;
     }
 
-    //★他のバリデーションが全て成功した後に実行される
     public function withValidator($validator)
     {
-        //★カスタムバリデーションルールを追加
         $validator->after(function ($validator) {
             $clockIn = $this->input('clock_in_time');
             $clockOut = $this->input('clock_out_time');
-            //★Carbonインスタンスに変換（存在する場合のみ）
-            // ここに到達した時点で必ず値が存在し、date_format:H:i を満たしているはず
             $parsedClockIn = Carbon::parse($clockIn);
             $parsedClockOut = Carbon::parse($clockOut);
 
-            //★休憩開始時刻および休憩終了時間が出勤時間および退勤時間を越えている場合のバリデーション
             foreach ($this->input('rests', []) as $index => $rest) {
                 $restStart = $rest['start_time'] ?? null;
                 $restEnd = $rest['end_time'] ?? null;
 
-                //★休憩開始と終了の両方が入力されている場合のみチェック
                 if ($restStart && $restEnd) {
                     $parsedRestStart = Carbon::parse($restStart);
                     $parsedRestEnd = Carbon::parse($restEnd);
 
-                    // 休憩開始時間が勤務開始時間より前、または勤務終了時間より後の場合
-                    // ★★★ ここを修正: or $parsedRestStart->gt($parsedClockOut) を追加 ★★★
                     if ($parsedRestStart->lt($parsedClockIn) || $parsedRestStart->gt($parsedClockOut)) {
                         $validator->errors()->add("rests.{$index}.start_time", '休憩時間が勤務時間外です');
                     }
-                    // 休憩終了時間が勤務開始時間より前、または勤務終了時間より後の場合
-                    // ★★★ ここを修正: $parsedRestEnd->lt($parsedClockIn) を追加（念のため） ★★★
                     if ($parsedRestEnd->lt($parsedClockIn) || $parsedRestEnd->gt($parsedClockOut)) {
                         $validator->errors()->add("rests.{$index}.end_time", '休憩時間が勤務時間外です');
                     }

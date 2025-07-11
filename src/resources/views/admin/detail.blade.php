@@ -1,4 +1,4 @@
-@extends('layouts.app')<!--★-->
+@extends('layouts.app')
 
 @section('title','勤怠詳細')
 
@@ -11,7 +11,6 @@
 @section('content')
 <div class="content">
     <h1 class="page-title">勤怠詳細</h1>
-    <!--★修正成功メッセージ-->
     @if (session('success'))
         <div class="alert-success">
             {{ session('success') }}
@@ -20,12 +19,10 @@
 
     <form action="{{ $is_for_approval ? '/stamp_correction_request/approve/' . $attendanceCorrectionRequest->id : '/admin/attendance/update/' . $attendance->id }}" method="post">
         @csrf
-        <!--★承認処理ではPATCH不要。直接修正では必要-->
         @unless($is_for_approval)
             @method('patch')
         @endunless
 
-        <!--★勤怠IDまたは修正申請IDを隠しフィールドで送信-->
         @if ($is_for_approval)
             <input type="hidden" name="correction_request_id" value="{{ $attendanceCorrectionRequest->id }}">
         @else
@@ -34,12 +31,10 @@
 
         <div class="detail-card">
             <dl class="detail-list">
-                <!--★名前-->
                 <div class="detail-item">
                     <dt class="item-label">名前</dt>
                     <dd class="item-value name-value">{{ $user->name ?? '不明なユーザー' }}</dd>
                 </div>
-                <!--★日付-->
                 <div class="detail-item">
                     <dt class="item-label">日付</dt>
                     <dd class="item-value date-value">
@@ -48,10 +43,7 @@
                     </dd>
                 </div>
 
-                <!--★承認画面の場合-->
                 @if ($is_for_approval)
-                    <!--★申請内容のみ表示-->
-                    <!--★出勤・退勤-->
                     <div class="detail-item">
                         <dt class="item-label">出勤・退勤</dt>
                         <dd class="item-value time-display-group">
@@ -60,7 +52,6 @@
                             <span class="time-value">{{ $attendanceCorrectionRequest->requested_clock_out_time ? $attendanceCorrectionRequest->requested_clock_out_time->format('H:i') : '' }}</span>
                         </dd>
                     </div>
-                    <!--★休憩-->
                     @foreach ($requestedRestsForApproval as $index => $rest)
                     <div class="detail-item">
                         <dt class="item-label">休憩{{ $index + 1 }}</dt>
@@ -72,16 +63,13 @@
                     </div>
                     @endforeach
 
-                    <!--★備考-->
                     <div class="detail-item">
                         <dt class="item-label">備考</dt>
                         <dd class="item-value">
-                            {{ $attendanceCorrectionRequest->requested_note ?? ''}}
+                            <span class="note-display-text">{{ $attendanceCorrectionRequest->requested_note ?? ''}}</span>
                         </dd>
                     </div>
                 @else
-                    <!--★直接修正の場合-->
-                    <!--★出勤・退勤-->
                     <div class="detail-item">
                         <dt class="item-label">出勤・退勤</dt>
                         <div class="item-content">
@@ -102,7 +90,6 @@
                             </p>
                         </div>
                     </div>
-                    <!--★休憩-->
                     @foreach ($rests as $index => $rest)
                     <div class="detail-item" data-rest-index="{{ $index }}">
                         <dt class="item-label">休憩{{ $index > 0 ? $index + 1 : '' }}</dt>
@@ -125,7 +112,6 @@
                         </div>
                     </div>
                     @endforeach
-                    <!--★備考-->
                     <div class="detail-item">
                         <dt class="item-label">備考</dt>
                         <div class="item-content">

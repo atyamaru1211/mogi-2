@@ -33,6 +33,10 @@
     align-items: center;
 }
 
+.note-display-text {
+    padding-left: 27px;
+}
+
 .name-value {
     padding-left: 15px;
 }

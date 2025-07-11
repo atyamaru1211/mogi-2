@@ -21,11 +21,9 @@
         <p class="time">{{ date('H:i') }}</p>
 
         <div class="buttons">
-            <!--★退勤済の場合はボタンを表示しない-->
             @if ($status == '退勤済')
                 <p class="message-after-punchout">お疲れさまでした。</p>
             @else
-                <!--★出勤ボタン-->
                 @if ($status == '勤務外')
                     <form action="/attendance" method="post">
                         @csrf
@@ -33,7 +31,6 @@
                         <button class="btn btn--large" type="submit">出勤</button>
                     </form>
                 @endif
-                <!--★退勤ボタン-->
                 @if ($status == '出勤中')
                     <form action="/attendance" method="post">
                         @csrf
@@ -41,7 +38,6 @@
                         <button class="btn btn--large" type="submit">退勤</button>
                     </form>
                 @endif
-                <!--★休憩ボタン-->
                 @if ($status == '出勤中')
                     <form action="/attendance" method="post">
                         @csrf
@@ -49,7 +45,6 @@
                         <button class="btn btn--large rest" type="submit">休憩入</button>
                     </form>
                 @endif
-                <!--★休憩戻りボタン-->
                 @if ($status == '休憩中')
                     <form action="/attendance" method="post">
                         @csrf

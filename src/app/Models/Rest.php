@@ -16,7 +16,6 @@ class Rest extends Model
         'rest_end_time',
     ];
 
-    //★データの内容を自動的に変換するよう指示。今回は時間に
     protected $casts = [
         'rest_start_time' => 'datetime',
         'rest_end_time' => 'datetime',

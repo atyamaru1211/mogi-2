@@ -17,12 +17,11 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
-    public function register(): void // <- このメソッド自体は残します
+    public function register(): void
     {
-        // ★★★ここにLogoutResponseの正しいバインディングを追加します★★★
         $this->app->singleton(
             LogoutResponseContract::class,
-            \App\Http\Responses\LogoutResponse::class // 作成するカスタムLogoutResponseクラスをバインド
+            \App\Http\Responses\LogoutResponse::class
         );
     }
 

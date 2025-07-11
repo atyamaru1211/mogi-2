@@ -17,27 +17,19 @@ class LogoutResponse implements LogoutResponseContract
      */
     public function toResponse($request): Response
     {
-        // ★ログアウト後のリダイレクト先を決定
-        $redirectPath = '/login'; // デフォルトは一般ユーザーのログインページ
+        $redirectPath = '/login';
 
-        // ログアウト処理を行う前に、どのガードで認証されていたかを確認
-        // この時点でAuth::check()がどのガードに紐づいているか判断し、そのガードをログアウト
         if (Auth::guard('admin')->check()) {
-            $redirectPath = '/admin/login'; // 管理者としてログインしていたら管理者ログインページへ
-            Auth::guard('admin')->logout(); // 管理者ガードをログアウト
+            $redirectPath = '/admin/login';
+            Auth::guard('admin')->logout();
         } elseif (Auth::guard('web')->check()) {
-            $redirectPath = '/login'; // 一般ユーザーとしてログインしていたら一般ログインページへ
-            Auth::guard('web')->logout(); // 一般ユーザーガードをログアウト
-        } else {
-            // どちらのガードも認証されていないが、念のためセッションをクリア
-            // これは通常発生しないが、複数ガード対応の安全策
+            $redirectPath = '/login';
+            Auth::guard('web')->logout();
         }
 
-        // ★全てのセッションを無効化し、CSRFトークンを再生成
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // 決定されたパスにリダイレクト
         return new RedirectResponse(url($redirectPath));
     }
 }
