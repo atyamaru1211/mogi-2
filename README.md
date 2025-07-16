@@ -11,17 +11,17 @@
 2. `composer install`
 3. `cp .env.example .env`
 
-7. アプリケーションキーの作成
+4. アプリケーションキーの作成
 ``` bash
 php artisan key:generate
 ```
 
-8. マイグレーションの実行
+5. マイグレーションの実行
 ``` bash
 php artisan migrate
 ```
 
-9. シーディングの実行
+6. シーディングの実行
 ``` bash
 php artisan db:seed
 ```
@@ -30,9 +30,6 @@ php artisan db:seed
 ## メール認証
 
 開発環境でのメール確認には **Mailhog** を使用しています。
-認証メールは以下のURLで確認できます。
-http://localhost:8025
-
 `.env` ファイルのメール設定は、以下のように設定してください。
 ``` text
 MAIL_MAILER=smtp
@@ -178,7 +175,7 @@ php artisan migrate:fresh --env=testing
 
 
 ## 使用技術(実行環境)
-- PHP 7.4.9
+- PHP 7.4.33
 - Laravel8.83.8
 - MySQL8.0.26
 
