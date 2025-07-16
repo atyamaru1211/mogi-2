@@ -1,21 +1,31 @@
 # 勤怠管理システム
 
 ## 環境構築
+**Dockerビルド**
+1. `git clone git@github.com:atyamaru1211/mogi-2.git`
+2. DockerDesktopアプリを立ち上げる
+3. `docker-compose up -d --build`
 
-1.  Docker Desktop アプリケーションを起動します。
-2.  プロジェクト直下で、以下のコマンドを実行します。
+**Laravel環境構築**
+1. `docker-compose exec php bash`
+2. `composer install`
+3. `cp .env.example .env`
 
-    ```bash
-    make init
-    ```
+7. アプリケーションキーの作成
+``` bash
+php artisan key:generate
+```
 
-    ※`make init` 実行後、`.env` ファイルが作成されます。メール設定は、**手動で`.env`ファイルを編集して設定**してください。
-3.  以下のコマンドでデータベースのマイグレーションとシーディングを実行します。
+8. マイグレーションの実行
+``` bash
+php artisan migrate
+```
 
-    ```bash
-    docker-compose exec php bash
-    php artisan migrate:fresh --seed
-    ```
+9. シーディングの実行
+``` bash
+php artisan db:seed
+```
+
 
 ## メール認証
 
